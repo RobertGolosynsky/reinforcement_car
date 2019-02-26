@@ -32,12 +32,25 @@ map = persister.open()
 
 debug = (50,250,150)
 def point(p, c):
-    
-    print("point", p)
     pygame.draw.circle(screen, c, (int(p.x), int(p.y)), 4, 4)
 
 def line(p, v):
     pygame.draw.line(screen, debug, p, p+v, 2)
+
+def ccw(A,B,C):
+    return (C.y-A.y) * (B.x-A.x) > (B.y-A.y) * (C.x-A.x)
+
+def intersect(A,B,C,D):
+    return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+
+def intersects_map(map, box):
+    for cara, carb in zip(box, box[1:]+[box[0]]):
+        points = []
+        for part in map.points:
+            for pa, pb in zip(part, part[1:]):
+                if intersect(cara,carb,pa,pb):
+                    return True
+    return False
 
 car = Car(Vector2(w/2, h/2))
 sprites = pygame.sprite.Group(car)
@@ -60,8 +73,17 @@ while not done:
     sprites.draw(screen)
 
     debug = (50,250,150)
-    pygame.draw.rect(screen, debug, car.rect, 1)
-   
+    # pygame.draw.rect(screen, debug, car.rect, 1)
+    car_box = car.get_hitbox()
+
+    if intersects_map(map, car_box):
+        pygame.draw.aalines(screen, (255,0,0), True, car.get_hitbox(), 2)
+    else:
+        pygame.draw.aalines(screen, debug, True, car.get_hitbox(), 2)
+
+
+    
+
     # point(car.r, (255, 0, 0))
     # point(car.bot, (0,0,255))
     # point(car.position, (0,255,0))

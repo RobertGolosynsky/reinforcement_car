@@ -13,7 +13,10 @@ def crosspoint(p, r, p1, p2):
     v1 = p - p1
     v2 = p2 - p1
     v3 = Vector2(-r.y, r.x)
-    t1 = v2.cross(v1) / v2.dot(v3)
+    m = v2.dot(v3)
+    if m==0:
+        return
+    t1 = v2.cross(v1) / m
     t2 = v1.dot(v3) / v2.dot(v3)
     if t1 >= 0.0 and t2 >= 0.0 and t2 <= 1.0:
         return p + t1 * r
@@ -79,7 +82,12 @@ class Car(pygame.sprite.Sprite):
         self.bot = Vector2()
         self.bot_to_r = Vector2()
         self.r_to_new_bot = Vector2()
+
+        self.hitbox = [Vector2(-10, 20).rotate(self.angle),Vector2(-10, -20).rotate(self.angle),
+        Vector2(10, -20).rotate(self.angle),Vector2(10, 20).rotate(self.angle)]
     
+    def get_hitbox(self):
+        return [v.rotate(self.angle)+self.position for v in self.hitbox]
 
     def update(self, events, dt):
         keypressed = pygame.key.get_pressed()
