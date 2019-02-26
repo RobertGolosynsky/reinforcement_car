@@ -4,7 +4,7 @@ import pygame
 from pygame.math import *
 import math
 
-from car import Car
+from car import Car, Lidar
 from polymap import Map, Presenter, Persister
 
 BLACK = (0, 0, 0)
@@ -41,6 +41,9 @@ def line(p, v):
 
 car = Car(Vector2(w/2, h/2))
 sprites = pygame.sprite.Group(car)
+
+lidar = Lidar()
+
 while not done:
     events = pygame.event.get()
     for e in events:
@@ -59,18 +62,20 @@ while not done:
     debug = (50,250,150)
     pygame.draw.rect(screen, debug, car.rect, 1)
    
-    point(car.r, (255, 0, 0))
-    point(car.bot, (0,0,255))
-    point(car.position, (0,255,0))
-    point(car.position+car.direction*100, (255,255,0))
-    point(car.r+car.r_to_new_bot, (255,0,255))
+    # point(car.r, (255, 0, 0))
+    # point(car.bot, (0,0,255))
+    # point(car.position, (0,255,0))
+    # point(car.position+car.direction*100, (255,255,0))
+    # point(car.r+car.r_to_new_bot, (255,0,255))
 
-    line(car.bot, car.bot_to_r)
-    line(car.r, car.r_to_new_bot)
-    direc = Vector2()
-    direc.from_polar((1, car.angle))
-    line(car.position, direc*40)
+    # line(car.bot, car.bot_to_r)
+    # line(car.r, car.r_to_new_bot)
+    # direc = Vector2()
+    # direc.from_polar((1, car.angle))
+    # line(car.position, direc*40)
     presenter.draw(screen, map)
+
+    lidar.draw(screen, car.position, car.angle, map)
 
     pygame.display.flip()
     
