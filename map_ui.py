@@ -46,7 +46,7 @@ while not done:
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                running = False
+                done = True
             elif event.key == pygame.K_s:
                 mods = pygame.key.get_mods()
                 if mods & pygame.KMOD_CTRL:

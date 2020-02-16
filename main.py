@@ -63,6 +63,9 @@ while not done:
         if e.type == pygame.QUIT:
             done = True
             break  
+        elif e.type == pygame.KEYDOWN \
+        	and e.key == pygame.K_ESCAPE:
+                done = True
  
     dt = clock.tick(120)
     
@@ -104,3 +107,10 @@ while not done:
     
  
 pygame.quit()
+
+speeds = car.debug["speed"]
+print(car.debug) 
+import matplotlib.pyplot as plt
+
+plt.plot(speeds)
+plt.savefig("img.png")

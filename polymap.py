@@ -10,13 +10,16 @@ class Persister():
         pass
 
 
-    def save(self, map):
+    def save(self, amap):
         root = Tk()
-        filename =  filedialog.asksaveasfilename(initialdir = ".",title = "Select file")
+        print(amap)
+        filename = filedialog.asksaveasfilename(initialdir = ".",title = "Select file")
+        print(filename)
         try:
-            f = open(filename, 'xb')
+            f = open(filename, 'wb')
             pickle.dump(amap, f)
         except:
+            raise
             pass
         root.destroy()
 
@@ -26,13 +29,13 @@ class Persister():
         filename = filedialog.askopenfilename(initialdir = ".",title = "Select file")
         try:
             f = open(filename, 'rb')
-            map = pickle.load(f)
+            amap = pickle.load(f)
         except:
             raise
             return None
         root.destroy()
 
-        return map
+        return amap
 
 
 class Map():

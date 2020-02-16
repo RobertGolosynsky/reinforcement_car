@@ -63,6 +63,7 @@ class Car(pygame.sprite.Sprite):
 
     def __init__(self, position):
         super().__init__()
+        self.debug = {"speed":[], "turn_angle":[] }
         car_img = pygame.image.load("car_red.jpg")
         self.car_length = 40
         self.image = pygame.transform.scale(car_img, (40, 20))
@@ -73,6 +74,9 @@ class Car(pygame.sprite.Sprite):
         self.position = position  
         self.speed = 0 
         self.acceleration = 0
+
+        self.air_friction_coef = 0.00005
+        self.wheels_friction_coef = 0.0004
 
         self.turn_angle = 0
         self.max_turn_angle = 40
@@ -111,6 +115,20 @@ class Car(pygame.sprite.Sprite):
         self.turn_angle = max(min(self.max_turn_angle, self.turn_angle), -self.max_turn_angle)
         
         self.speed+=self.acceleration*dt
+        
+        air_friction_loss = self.speed*self.speed*self.air_friction_coef*dt
+        
+        wheels_friction_loss = self.speed*self.wheels_friction_coef*dt
+        
+        losses = air_friction_loss + wheels_friction_loss
+        if self.speed>0:
+            self.speed -= losses
+        else:
+            self.speed += losses
+        
+        self.debug["speed"].append(self.speed)
+        self.debug["turn_angle"].append(self.turn_angle)
+        
         self.acceleration = 0
 
         self.direction = Vector2()
